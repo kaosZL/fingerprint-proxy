@@ -50,7 +50,7 @@ flowchart LR
 
 ## 安装
 
-1. 前往 [GitHub Releases](https://github.com/kaosZL/fingerprint-proxy/releases) 下载 Fingerprint-Proxy-Setup-1.0.0.exe。
+1. 前往 [GitHub Releases](https://github.com/kaosZL/fingerprint-proxy/releases) 下载最新的 `Fingerprint-Proxy-Setup-<version>.exe`。
 2. 双击安装。安装器是 Windows x64 的当前用户安装包，不需要管理员权限。
 3. Windows SmartScreen 可能提示未知发布者，因为当前版本没有代码签名。请只从本仓库的 Release 页面下载，并核对 Release 中给出的 SHA-256。
 4. 安装完成后，从开始菜单或桌面启动 Fingerprint Proxy。
@@ -100,7 +100,7 @@ HTTP：
 | %APPDATA%\FingerprintProxy\sources | YAML 快照 |
 | %LOCALAPPDATA%\FingerprintProxy\runtime\active | 当前 config.yaml、proxy-import.txt 和运行时数据 |
 
-本程序只管理自己启动的 Mihomo 进程。关闭应用时会优雅结束该受管进程，不会强制结束其他工具启动的 Mihomo 或 Clash Verge 进程。
+点击窗口右上角的关闭按钮会将程序隐藏到系统托盘，代理服务会继续运行。右键系统托盘图标可选择“显示界面”或“退出”；选择“退出”时，程序会优雅结束自己启动的 Mihomo 进程，不会强制结束其他工具启动的 Mihomo 或 Clash Verge 进程。
 
 ## 隐私与安全
 

@@ -237,6 +237,18 @@ async function main() {
     await page.waitForTimeout(250);
     await page.screenshot({ path: minimumScreenshotPath });
 
+    const closeBehavior = await electronApp.evaluate(async ({ BrowserWindow }) => {
+      const window = BrowserWindow.getAllWindows()[0];
+      if (!window) throw new Error('Main window is unavailable.');
+      window.close();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const result = { destroyed: window.isDestroyed(), visible: window.isVisible() };
+      window.show();
+      window.focus();
+      return result;
+    });
+    assert.deepEqual(closeBehavior, { destroyed: false, visible: false });
+
     await page.evaluate(() => window.fingerprintProxy.service.stop());
     await waitForState(page, (state) => state.service.state === 'stopped');
     assert.equal(await canConnect(refreshedWhileRunning.startPort, 500), false);

@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.0.1] - 2026-09-11
+
+### Changed
+
+- Closing the main window now hides Fingerprint Proxy to the Windows system
+  tray instead of exiting the application.
+- Added a system-tray context menu with Show window and Quit actions.
+
 ## [1.0.0] - 2026-09-11
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "fingerprint-proxy-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Local Mihomo proxy manager for fingerprint browsers",
   "main": "dist/main.js",
   "author": "Fingerprint Proxy",

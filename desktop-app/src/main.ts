@@ -1,9 +1,10 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, Tray } from 'electron';
 import * as path from 'node:path';
 import { ConfigManager } from './config-manager';
 
 let mainWindow: BrowserWindow | undefined;
 let manager: ConfigManager | undefined;
+let tray: Tray | undefined;
 let quitting = false;
 
 const singleInstance = app.requestSingleInstanceLock();
@@ -11,10 +12,7 @@ if (!singleInstance) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    if (!mainWindow) return;
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.show();
-    mainWindow.focus();
+    showMainWindow();
   });
 
   app.whenReady().then(async () => {
@@ -23,6 +21,7 @@ if (!singleInstance) {
       mainWindow.webContents.send(channel, payload);
     });
     registerIpc();
+    createTray();
     createWindow();
     await manager.initialize();
     await sendState();
@@ -32,7 +31,11 @@ if (!singleInstance) {
   });
 
   app.on('before-quit', (event) => {
-    if (!manager || quitting) return;
+    if (quitting) return;
+    if (!manager) {
+      quitting = true;
+      return;
+    }
     event.preventDefault();
     quitting = true;
     void manager.prepareForQuit().then(() => app.quit()).catch((error) => {
@@ -46,7 +49,7 @@ if (!singleInstance) {
   });
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    showMainWindow();
   });
 }
 
@@ -58,6 +61,7 @@ function createWindow(): void {
     minHeight: 700,
     backgroundColor: '#0b1015',
     title: 'Fingerprint Proxy',
+    icon: iconPath(),
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -69,9 +73,40 @@ function createWindow(): void {
 
   mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   void mainWindow.loadFile(path.join(app.getAppPath(), 'src', 'renderer', 'index.html'));
+  mainWindow.on('close', (event) => {
+    if (quitting) return;
+    event.preventDefault();
+    mainWindow?.hide();
+  });
   mainWindow.on('closed', () => {
     mainWindow = undefined;
   });
+}
+
+function createTray(): void {
+  if (tray) return;
+  tray = new Tray(iconPath());
+  tray.setToolTip('Fingerprint Proxy');
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: '显示界面', click: () => showMainWindow() },
+    { type: 'separator' },
+    { label: '退出', click: () => app.quit() },
+  ]));
+  tray.on('double-click', () => showMainWindow());
+}
+
+function showMainWindow(): void {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
+}
+
+function iconPath(): string {
+  return path.join(app.getAppPath(), 'assets', 'icon.ico');
 }
 
 function getManager(): ConfigManager {
