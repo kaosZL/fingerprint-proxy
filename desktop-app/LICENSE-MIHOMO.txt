@@ -1,0 +1,9 @@
+Mihomo is distributed as an independent third-party component.
+
+The bundled Mihomo binary is licensed under the GNU General Public License
+version 3 (GPL-3.0). See the upstream Mihomo project for the complete license
+text and corresponding source code:
+
+https://github.com/MetaCubeX/mihomo
+
+This application does not modify the Mihomo binary.

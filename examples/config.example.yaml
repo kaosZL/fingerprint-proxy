@@ -1,0 +1,70 @@
+# Safe, non-working example only. Replace every example value with your own
+# locally exported Clash Verge / Mihomo YAML before using the application.
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
+proxies:
+  - name: Example Singapore 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: CHANGE_ME
+    udp: true
+    sni: example.invalid
+    skip-cert-verify: false
+  - name: Example United States 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: CHANGE_ME
+    udp: true
+    sni: example.invalid
+    skip-cert-verify: false
+  - name: Example Japan 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: CHANGE_ME
+    udp: true
+    sni: example.invalid
+    skip-cert-verify: false
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - Example Singapore 01
+      - Example United States 01
+      - Example Japan 01
+
+rules:
+  - MATCH,Proxy
+
+# An old generated listener is intentionally included. Fingerprint Proxy will
+# replace fpN listeners, while retaining and binding custom listeners locally.
+listeners:
+  - name: fp1
+    type: socks
+    port: 20001
+    listen: 0.0.0.0
+    proxy: Example Singapore 01
+    udp: true
+  - name: custom-http
+    type: http
+    port: 18080
+    listen: 0.0.0.0
+    proxy: Example Singapore 01

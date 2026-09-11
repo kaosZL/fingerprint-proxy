@@ -1,0 +1,24 @@
+# Private subscription data and generated local output. Never publish these.
+/*.yaml
+/*.yml
+/proxy-import.txt
+/cache.db
+/start.bat
+/README.txt
+/mihomo.exe
+/geoip.metadb
+/desktop-app/geoip.metadb
+
+# Build and dependency output.
+/desktop-app/node_modules/
+/desktop-app/dist/
+/desktop-app/release/
+/desktop-app/.electron/
+
+# Local application state and OS files.
+*.log
+*.db
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

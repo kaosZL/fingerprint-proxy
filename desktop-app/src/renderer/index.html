@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self';" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fingerprint Proxy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark"><img src="../../assets/logo.svg" alt="Fingerprint Proxy" /></div>
+          <div>
+            <div class="brand-name">Fingerprint Proxy</div>
+            <div class="brand-subtitle">LOCAL ROUTING CONSOLE</div>
+          </div>
+        </div>
+        <div class="service-indicator">
+          <span id="status-dot" class="status-dot is-idle"></span>
+          <div>
+            <div id="service-label" class="service-label">未运行</div>
+            <div id="service-detail" class="service-detail">等待启动</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="sidebar">
+          <div class="sidebar-heading">
+            <div>
+              <div class="eyebrow">SOURCES</div>
+              <h1>配置源</h1>
+            </div>
+            <button id="add-source" class="icon-button accent" title="导入 YAML" aria-label="导入 YAML"></button>
+          </div>
+          <div id="source-list" class="source-list"></div>
+          <div class="sidebar-footer">
+            <div class="secure-note"><span id="shield-icon"></span><span>仅绑定本机 127.0.0.1</span></div>
+            <div class="version-note">Mihomo runtime · Windows x64</div>
+          </div>
+        </aside>
+
+        <main class="main-content">
+          <div id="notice-stack" class="notice-stack"></div>
+
+          <section class="hero-row">
+            <div>
+              <div class="eyebrow">SELECTED SOURCE</div>
+              <h2 id="active-source-title">尚未选择配置源</h2>
+              <div id="active-source-path" class="muted-line">导入一个 Clash / Mihomo YAML 文件开始</div>
+            </div>
+            <div class="hero-actions">
+              <button id="refresh-source" class="button primary"><span id="refresh-icon"></span><span>刷新配置</span></button>
+              <button id="start-service" class="button"><span id="play-icon"></span><span>启动代理</span></button>
+              <button id="stop-service" class="button subtle"><span id="stop-icon"></span><span>停止</span></button>
+              <button id="restart-service" class="button subtle"><span id="restart-icon"></span><span>重启</span></button>
+            </div>
+          </section>
+
+          <section class="control-panel panel">
+            <div class="panel-heading">
+              <div>
+                <div class="eyebrow">LOCAL ENTRANCES</div>
+                <h3>指纹代理端口</h3>
+              </div>
+              <div id="pending-chip" class="chip hidden"><span id="pending-icon"></span>待重启</div>
+            </div>
+            <div class="controls-grid">
+              <label class="field">
+                <span>起始端口</span>
+                <span class="input-wrap"><input id="start-port" type="number" min="1024" max="65535" step="1" value="20001" /><span class="input-suffix">+ N</span></span>
+                <small>按节点顺序递增，最多 500 个端口</small>
+              </label>
+              <label class="field">
+                <span>本地代理类型</span>
+                <select id="protocol">
+                  <option value="socks5">SOCKS5</option>
+                  <option value="http">HTTP</option>
+                  <option value="https" disabled>HTTPS（需要证书）</option>
+                  <option value="ssh" disabled>SSH（不支持）</option>
+                </select>
+                <small>HTTPS / SSH 暂不生成不可用的伪协议</small>
+              </label>
+              <div class="metric-block">
+                <span>本次入口</span>
+                <strong id="node-count">0</strong>
+                <small id="port-range">尚未生成</small>
+              </div>
+              <div class="metric-block">
+                <span>混合端口</span>
+                <strong id="mixed-port">7890</strong>
+                <small>沿用源 YAML</small>
+              </div>
+            </div>
+          </section>
+
+          <section class="output-panel panel">
+            <div class="panel-heading output-heading">
+              <div>
+                <div class="eyebrow">IMPORT PAYLOAD</div>
+                <h3>proxy-import.txt</h3>
+              </div>
+              <button id="copy-import" class="button copy-button"><span id="copy-icon"></span><span>复制全部</span></button>
+            </div>
+            <textarea id="import-content" class="import-area" readonly spellcheck="false" placeholder="刷新配置后，这里会显示指纹浏览器批量导入内容"></textarea>
+          </section>
+
+          <section class="logs-panel panel">
+            <div class="panel-heading output-heading">
+              <div>
+                <div class="eyebrow">RUNTIME LOG</div>
+                <h3>运行日志</h3>
+              </div>
+              <button id="clear-logs" class="icon-button" title="清空日志" aria-label="清空日志"></button>
+            </div>
+            <pre id="logs-content" class="logs-area"></pre>
+          </section>
+        </main>
+      </div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+    <script src="renderer.js"></script>
+  </body>
+</html>

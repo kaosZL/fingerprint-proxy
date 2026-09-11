@@ -1,0 +1,90 @@
+{
+  "name": "fingerprint-proxy-desktop",
+  "version": "1.0.0",
+  "description": "Local Mihomo proxy manager for fingerprint browsers",
+  "main": "dist/main.js",
+  "author": "Fingerprint Proxy",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaosZL/fingerprint-proxy.git"
+  },
+  "homepage": "https://github.com/kaosZL/fingerprint-proxy#readme",
+  "bugs": {
+    "url": "https://github.com/kaosZL/fingerprint-proxy/issues"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron .",
+    "test": "npm run build && node --test tests/*.test.js",
+    "smoke": "npm run build && node tests/electron-smoke.js",
+    "privacy:check": "node scripts/privacy-check.mjs",
+    "verify": "npm run privacy:check && npm test && npm run smoke",
+    "dist": "npm run build && electron-builder --win nsis --x64"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "playwright-core": "^1.63.0",
+    "typescript": "^5.8.3"
+  },
+  "build": {
+    "appId": "com.fingerprintproxy.desktop",
+    "productName": "Fingerprint Proxy",
+    "asar": true,
+    "files": [
+      "dist/**/*",
+      "src/renderer/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../mihomo.exe",
+        "to": "mihomo/mihomo.exe"
+      },
+      {
+        "from": "../geoip.metadb",
+        "to": "mihomo/geoip.metadb"
+      },
+      {
+        "from": "LICENSE-MIHOMO.txt",
+        "to": "licenses/LICENSE-MIHOMO.txt"
+      }
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "artifactName": "Fingerprint-Proxy-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Fingerprint Proxy",
+      "runAfterFinish": true
+    }
+  }
+}

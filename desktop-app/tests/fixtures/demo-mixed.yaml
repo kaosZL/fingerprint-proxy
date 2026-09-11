@@ -1,0 +1,41 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+
+proxies:
+  - name: 已用流量：0 GB
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-metadata
+    sni: example.invalid
+  - name: Example AnyTLS 01
+    type: anytls
+    server: example.invalid
+    port: 443
+    password: demo-anytls
+    sni: example.invalid
+  - name: Example Shadowsocks 01
+    type: ss
+    server: example.invalid
+    port: 443
+    cipher: aes-128-gcm
+    password: demo-shadowsocks
+    udp: true
+  - name: Example SOCKS 01
+    type: socks5
+    server: example.invalid
+    port: 1080
+    udp: true
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - 已用流量：0 GB
+      - Example AnyTLS 01
+      - Example Shadowsocks 01
+      - Example SOCKS 01
+
+rules:
+  - MATCH,Proxy

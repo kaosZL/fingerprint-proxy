@@ -1,0 +1,51 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+
+proxies:
+  - name: 剩余流量：20 GB
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-traffic-metadata
+    sni: example.invalid
+  - name: 套餐到期：示例
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-expiry-metadata
+    sni: example.invalid
+  - name: Example Hong Kong 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-hk-01
+    udp: true
+    sni: example.invalid
+  - name: Example Singapore 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-sg-01
+    udp: true
+    sni: example.invalid
+  - name: Example United States 01
+    type: trojan
+    server: example.invalid
+    port: 443
+    password: demo-us-01
+    udp: true
+    sni: example.invalid
+
+proxy-groups:
+  - name: Proxy
+    type: select
+    proxies:
+      - 剩余流量：20 GB
+      - 套餐到期：示例
+      - Example Hong Kong 01
+      - Example Singapore 01
+      - Example United States 01
+
+rules:
+  - MATCH,Proxy
